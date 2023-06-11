@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TodoRepository : MongoRepository<TodoDocument, String> {
+
+  fun getTodoDocumentsByUserId(id: Long): List<TodoDocument>
 }

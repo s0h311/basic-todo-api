@@ -1,6 +1,6 @@
 package de.soheilnazari.bfour
 
 data class CustomError(
-    var name: String,
+    var name: String? = "Error",
     var description: String
 )
