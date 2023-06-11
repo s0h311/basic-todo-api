@@ -1,0 +1,25 @@
+spring:
+  data:
+    mongodb:
+      #host: localhost
+      #port: 27017
+      #database: prod
+      #username: root
+      #password: root
+      #authentication-database: admin
+      uri: mongodb://root:root@localhost:27017/prod?authSource=admin
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/prod
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 8080
