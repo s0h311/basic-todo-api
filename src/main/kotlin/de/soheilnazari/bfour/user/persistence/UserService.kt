@@ -2,6 +2,7 @@ package de.soheilnazari.bfour.user.persistence
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserService {
@@ -13,11 +14,19 @@ class UserService {
     return userRepository.save(user)
   }
 
-  fun removeById(id: Long) {
-    userRepository.deleteById(id)
+  fun getById(id: Long): Optional<UserEntity> {
+    return userRepository.findById(id)
   }
 
   fun getAll(): List<UserEntity> {
     return userRepository.findAll()
+  }
+
+  fun removeById(id: Long) {
+    userRepository.deleteById(id)
+  }
+
+  fun removeAll() {
+    userRepository.deleteAll()
   }
 }

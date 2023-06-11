@@ -4,5 +4,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface TodoRepository : MongoRepository<TodoDocument, Long> {
+interface TodoRepository : MongoRepository<TodoDocument, String> {
 }
