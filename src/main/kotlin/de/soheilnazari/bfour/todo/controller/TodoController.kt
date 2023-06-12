@@ -4,7 +4,9 @@ import de.soheilnazari.bfour.CustomError
 import de.soheilnazari.bfour.todo.persistence.TodoDocument
 import de.soheilnazari.bfour.todo.persistence.TodoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import java.util.*
 
 @RestController
@@ -24,7 +26,7 @@ class TodoController {
     val result: Optional<TodoDocument> = todoService.getById(id)
     if (result.isEmpty) {
       return Pair(
-          TodoDocument("", "", "", 0),
+          TodoDocument("", "", "", 0L, dueDate = LocalDateTime.MIN),
           CustomError("Error", "Todo not found")
       )
     }
@@ -35,8 +37,13 @@ class TodoController {
   }
 
   @GetMapping
-  fun getAllTodos(): List<TodoDocument> {
-    return todoService.getAll()
+  fun getAllTodos(
+      @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDate: LocalDateTime?,
+      @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDateBefore: LocalDateTime?,
+      @RequestParam priority: Int?,
+      @RequestParam done: Boolean?
+  ): Pair<List<TodoDocument>, CustomError> {
+    return todoService.getAll(dueDate, dueDateBefore, priority, done)
   }
 
   @DeleteMapping("/{id}")
