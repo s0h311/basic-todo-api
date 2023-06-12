@@ -1,6 +1,8 @@
 ### **Welcome to bfour**
 
 ### Bfour is an **open source** and **RESTful** Backend for managing todos and the users associated with them.
+
+>By Merle Pantwich, Thuy Anh Nguyen, Farham Moazipor-Tehrani, Soheil Nazari
 ---
 <br/>
 
