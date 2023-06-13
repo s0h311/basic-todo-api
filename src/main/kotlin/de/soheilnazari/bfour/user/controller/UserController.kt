@@ -6,7 +6,9 @@ import de.soheilnazari.bfour.todo.persistence.TodoService
 import de.soheilnazari.bfour.user.persistence.UserEntity
 import de.soheilnazari.bfour.user.persistence.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import java.util.*
 
 @RestController
@@ -45,7 +47,13 @@ class UserController {
   }
 
   @GetMapping("/{id}/todo")
-  fun getTodosByUserId(@PathVariable id: Long): Pair<List<TodoDocument>, CustomError> {
-    return todoService.getTodosByUserId(id)
+  fun getTodosByUserId(
+      @PathVariable id: Long,
+      @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDate: LocalDateTime?,
+      @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDateBefore: LocalDateTime?,
+      @RequestParam priority: Int?,
+      @RequestParam done: Boolean?
+  ): Pair<List<TodoDocument>, CustomError> {
+    return todoService.getTodosByUserId(id, dueDate, dueDateBefore, priority, done)
   }
 }

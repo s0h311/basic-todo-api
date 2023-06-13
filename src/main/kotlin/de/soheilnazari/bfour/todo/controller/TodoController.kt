@@ -55,4 +55,9 @@ class TodoController {
   fun removeAllTodos() {
     todoService.removeAll()
   }
+
+  @PatchMapping("/{id}")
+  fun updateTodo(@PathVariable id: String, @RequestBody todoProps: TodoDocument) {
+    println(todoProps.description)
+  }
 }

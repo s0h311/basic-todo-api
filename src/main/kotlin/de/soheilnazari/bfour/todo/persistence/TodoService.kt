@@ -47,19 +47,14 @@ class TodoService {
       priority: Int?,
       done: Boolean?
   ): Pair<List<TodoDocument>, CustomError> {
-    var result: List<TodoDocument> = todoRepository.findAll()
+    val result: List<TodoDocument> = todoRepository.findAll()
 
     if (dueDate != null && dueDateBefore != null) return Pair(
         emptyList(),
         CustomError("Error", "dueDate and dueDateBefore cannot be present simultaneously")
     )
-    if (dueDate != null) result = result.filter { todo -> todo.dueDate == dueDate }
-    else if (dueDateBefore != null) result = result.filter { todo -> todo.dueDate.isBefore(dueDateBefore) }
-    if (priority != null) result = result.filter { todo -> todo.priority == priority }
-    if (done != null) result = result.filter { todo -> todo.done == done }
-
     return Pair(
-        result,
+        filterTodos(result, dueDate, dueDateBefore, priority, done),
         CustomError("", "")
     )
   }
@@ -72,16 +67,55 @@ class TodoService {
     todoRepository.deleteAll()
   }
 
-  fun getTodosByUserId(id: Long): Pair<List<TodoDocument>, CustomError> {
+  fun getTodosByUserId(
+      id: Long,
+      dueDate: LocalDateTime?,
+      dueDateBefore: LocalDateTime?,
+      priority: Int?,
+      done: Boolean?
+  ): Pair<List<TodoDocument>, CustomError> {
     val user: Pair<UserEntity, CustomError> = userService.getById(id)
+    val result: List<TodoDocument> = todoRepository.findAllByUserId(id)
 
     if (user.first.id == 0L) return Pair(
         emptyList(),
         CustomError("Error", "User not found")
     )
+    if (dueDate != null && dueDateBefore != null) return Pair(
+        emptyList(),
+        CustomError("Error", "dueDate and dueDateBefore cannot be present simultaneously")
+    )
     return Pair(
-        todoRepository.findAllByUserId(id),
+        filterTodos(result, dueDate, dueDateBefore, priority, done),
         CustomError("", "")
+    )
+  }
+
+  fun filterTodos(
+      todos: List<TodoDocument>,
+      dueDate: LocalDateTime?,
+      dueDateBefore: LocalDateTime?,
+      priority: Int?,
+      done: Boolean?)
+      : List<TodoDocument> {
+    var result = todos
+    if (dueDate != null) result = result.filter { todo -> todo.dueDate == dueDate }
+    else if (dueDateBefore != null) result = result.filter { todo -> todo.dueDate.isBefore(dueDateBefore) }
+    if (priority != null) result = result.filter { todo -> todo.priority == priority }
+    if (done != null) result = result.filter { todo -> todo.done == done }
+
+    return result
+  }
+
+  fun updateTodo(id: String, newProperties: TodoDocument): Pair<TodoDocument, CustomError> {
+    var old: Optional<TodoDocument> = getById(id)
+    if (old.isEmpty) return Pair(
+        TodoDocument("", "", "", 0L, 0, LocalDateTime.MIN),
+        CustomError("Error", "Todo not found")
+    )
+    return Pair(
+        TodoDocument("", "", "", 0L, 0, LocalDateTime.MIN),
+        CustomError("Error", "Todo not found")
     )
   }
 }
