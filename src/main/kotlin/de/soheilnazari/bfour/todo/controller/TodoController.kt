@@ -41,9 +41,10 @@ class TodoController {
       @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDate: LocalDateTime?,
       @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDateBefore: LocalDateTime?,
       @RequestParam priority: Int?,
-      @RequestParam done: Boolean?
+      @RequestParam done: Boolean?,
+      @RequestParam ascending: Boolean?
   ): Pair<List<TodoDocument>, CustomError> {
-    return todoService.getAll(dueDate, dueDateBefore, priority, done)
+    return todoService.getAll(dueDate, dueDateBefore, priority, done, ascending)
   }
 
   @DeleteMapping("/{id}")
@@ -57,7 +58,14 @@ class TodoController {
   }
 
   @PatchMapping("/{id}")
-  fun updateTodo(@PathVariable id: String, @RequestBody todoProps: TodoDocument) {
-    println(todoProps.description)
+  fun updateTodo(
+      @PathVariable id: String,
+      @RequestParam title: String?,
+      @RequestParam description: String?,
+      @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") @RequestParam dueDate: LocalDateTime?,
+      @RequestParam priority: Int?,
+      @RequestParam done: Boolean?
+  ): Pair<TodoDocument, CustomError> {
+    return todoService.updateTodo(id, title, description, dueDate, priority, done)
   }
 }

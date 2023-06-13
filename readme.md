@@ -2,7 +2,7 @@
 
 ### Bfour is an **open source** and **RESTful** Backend for managing todos and the users associated with them.
 Requires:
-`Java 17`, `Gradle`
+`Java 17`, `Gradle`, `Docker`, `docker-compose`
 >By Merle Pantwich, Thuy Anh Nguyen, Farham Moazipor-Tehrani, Soheil Nazari
 ---
 
@@ -23,15 +23,33 @@ zu helfen, ihre Aufgaben effektiv zu organisieren und den Überblick zu behalten
     Aufgaben zu erhalten.
 4. ... Aufgaben nach verschiedenen Kriterien filtern können, wie z.B. Fälligkeitsdatum oder Priorität,
     um meine Aufgaben effektiv zu organisieren.
-5. ... meine bereits erstellten Aufgaben bearbeiten können, um Details zu aktualisieren oder Änderungen vorzunehmen.
-6. ... meine Aufgaben sortieren können, um eine individuelle Reihenfolge festzulegen, die meinen Bedürfnissen entspricht.
-7. ... meine To-Do-Liste speichern können, um meine Aufgaben auch nach dem Schließen der Applikation weiterhin verfügbar zu haben.
+5. ... meine bereits erstellten Aufgaben bearbeiten können, um Details zu aktualisieren oder Änderungen
+    vorzunehmen.
+6. ... meine Aufgaben nach Priorität sortieren können, um eine individuelle Reihenfolge festzulegen,
+    die meinen Bedürfnissen entspricht.
+7. ... meine To-Do-Liste speichern können, um meine Aufgaben auch nach dem Schließen der Applikation weiterhin
+    verfügbar zu haben.
 ```
 
 **Fachliches Datenmodel**
 
 ![](assets/datenmodel.png)
 
+---
+**Starting the Server**
+
+- Run `docker-compose up -d` in the root directory
+- **Only at the first start**, set the `ddl-auto` property to `update` in `application.yaml`
+- Start the Spring App
+- If you are getting errors about schemas or databases not being existing do the following:
+
+1. Set `schema` in `UserEntity.kt` to `public`
+
+2. In `application.yaml` change:
+
+    `jdbc:postgresql://localhost:5432/prod` to `jdbc:postgresql://localhost:5432/postgres`
+
+    `mongodb://root:root@localhost:27017/prod?authSource=admin` to `mongodb://root:root@localhost:27017/local?authSource=admin`
 ---
 **Example Usage**
 
@@ -68,19 +86,12 @@ zu helfen, ihre Aufgaben effektiv zu organisieren und den Überblick zu behalten
 - `priority` priorities: `1`, `2`, `3` (Although it's not limited)
 - `done` whether a Todo is done, can be either `false` or `true`
 
-*Modify the Todo with the id of 1234* -> `PATCH` request to `/todo/1234` with the following body:
-
-```Json
-{
-    "title": "Run",
-    "description": "As fast as you can",
-    "dueDate": "20-09-2024 19:00",
-    "priority": 1,
-    "done": true
-}
-```
-> Only provide the properties which should be updated
+*Modify the Todo with the id of 1234 ,set done to true* -> `PATCH` request to `/todo/1234?done=true` Provide the new property value as query parameter:
 
 > The userId of a Todo cannot be modified
 
 > Users cannot be modified at the moment
+
+*Sort the Todos in ascending order* -> `GET` request to `/todo?ascending=true`
+
+>By default, the result is sorted in descending order
